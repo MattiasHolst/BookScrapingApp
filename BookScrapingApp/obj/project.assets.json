@@ -158,11 +158,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\rh_mo\\Desktop\\Privat\\dotnet\\BookScrapingApp\\BookScrapingApp.csproj",
+      "projectUniqueName": "C:\\Users\\rh_mo\\Desktop\\Jobb\\BookScrapingApp\\BookScrapingApp\\BookScrapingApp.csproj",
       "projectName": "BookScrapingApp",
-      "projectPath": "C:\\Users\\rh_mo\\Desktop\\Privat\\dotnet\\BookScrapingApp\\BookScrapingApp.csproj",
+      "projectPath": "C:\\Users\\rh_mo\\Desktop\\Jobb\\BookScrapingApp\\BookScrapingApp\\BookScrapingApp.csproj",
       "packagesPath": "C:\\Users\\rh_mo\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\rh_mo\\Desktop\\Privat\\dotnet\\BookScrapingApp\\obj\\",
+      "outputPath": "C:\\Users\\rh_mo\\Desktop\\Jobb\\BookScrapingApp\\BookScrapingApp\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\rh_mo\\AppData\\Roaming\\NuGet\\NuGet.Config"

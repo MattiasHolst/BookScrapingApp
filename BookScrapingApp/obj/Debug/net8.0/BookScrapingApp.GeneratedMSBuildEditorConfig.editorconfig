@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = BookScrapingApp
-build_property.ProjectDir = C:\Users\rh_mo\Desktop\Privat\dotnet\BookScrapingApp\
+build_property.ProjectDir = C:\Users\rh_mo\Desktop\Jobb\BookScrapingApp\BookScrapingApp\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

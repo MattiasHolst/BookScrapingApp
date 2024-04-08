@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "mi8rAyRIV0ifAbmsEwL2c9Ys7qpqeD2z2zX2vSc9Cmdu7aXwVBI3RHyVUg51+uuo5XCGMLLmvELS3QYUXTIo/A==",
+  "dgSpecHash": "o0h96lfvGai58RlQaK9CEyJB5AhwfI9UJywAz3NYPToJC1/RvVxiP0YU5cpjEowcyjJMpkSDiWXMlas7ZjHzGg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\rh_mo\\Desktop\\Privat\\dotnet\\BookScrapingApp\\BookScrapingApp.csproj",
+  "projectFilePath": "C:\\Users\\rh_mo\\Desktop\\Jobb\\BookScrapingApp\\BookScrapingApp\\BookScrapingApp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\rh_mo\\.nuget\\packages\\csvhelper\\31.0.3\\csvhelper.31.0.3.nupkg.sha512",
     "C:\\Users\\rh_mo\\.nuget\\packages\\htmlagilitypack\\1.11.60\\htmlagilitypack.1.11.60.nupkg.sha512",
