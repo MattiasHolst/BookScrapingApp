@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "dgSpecHash": "mi8rAyRIV0ifAbmsEwL2c9Ys7qpqeD2z2zX2vSc9Cmdu7aXwVBI3RHyVUg51+uuo5XCGMLLmvELS3QYUXTIo/A==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\rh_mo\\Desktop\\Privat\\dotnet\\BookScrapingApp\\BookScrapingApp.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\rh_mo\\.nuget\\packages\\csvhelper\\31.0.3\\csvhelper.31.0.3.nupkg.sha512",
+    "C:\\Users\\rh_mo\\.nuget\\packages\\htmlagilitypack\\1.11.60\\htmlagilitypack.1.11.60.nupkg.sha512",
+    "C:\\Users\\rh_mo\\.nuget\\packages\\htmlagilitypack.cssselectors\\1.0.2\\htmlagilitypack.cssselectors.1.0.2.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'HtmlAgilityPack.CssSelectors 1.0.2' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net8.0'. This package may not be fully compatible with your project.",
+      "libraryId": "HtmlAgilityPack.CssSelectors",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
+}
