@@ -18,6 +18,12 @@ namespace BookScrapingApp
 			if(!Directory.Exists("catalogue")) Directory.CreateDirectory("catalogue");
 			if(!Directory.Exists("catalogue/category")) Directory.CreateDirectory("catalogue/category");
 			if(!Directory.Exists("catalogue/category/books")) Directory.CreateDirectory("catalogue/category/books");
+			if(!Directory.Exists("static")) Directory.CreateDirectory("static");
+			if(!Directory.Exists("static/oscar")) Directory.CreateDirectory("static/oscar");
+			if(!Directory.Exists("static/oscar/css")) Directory.CreateDirectory("static/oscar/css");
+			if(!Directory.Exists("static/oscar/js")) Directory.CreateDirectory("static/oscar/js");
+			if(!Directory.Exists("static/oscar/js/bootstrap-datetimepicker")) Directory.CreateDirectory("static/oscar/js/bootstrap-datetimepicker");
+			
             // setting a global User-Agent header in HAP 
             web.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36";
 
@@ -26,6 +32,19 @@ namespace BookScrapingApp
 
 			var startPageDocument = web.Load(startPage); 
 
+			//CSS files
+			var cssElements = startPageDocument.DocumentNode.QuerySelectorAll("head > link"); 
+			foreach(var cssElement in cssElements){
+				var cssUrl = HtmlEntity.DeEntitize(cssElement.Attributes["href"].Value); 
+				var pageSplit = cssUrl.Split('/');
+				var countUrl = pageSplit.Length-1;
+
+				client.DownloadFile(startPage+cssUrl, cssUrl);
+
+			}
+           
+
+			//Index pages 
 			var booksSideNavUrl = HtmlEntity.DeEntitize(startPageDocument.DocumentNode.QuerySelector(".nav-list > li > a").Attributes["href"].Value);
 			var booksIndex = booksSideNavUrl.Split("/");
 			try{
