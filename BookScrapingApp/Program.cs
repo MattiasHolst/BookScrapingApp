@@ -15,6 +15,9 @@ namespace BookScrapingApp
 			var web = new HtmlWeb(); 
 			var startPage = "https://books.toscrape.com/";
 			var booksDirectory = "catalogue/category/books/";
+			if(!Directory.Exists("catalogue")) Directory.CreateDirectory("catalogue");
+			if(!Directory.Exists("catalogue/category")) Directory.CreateDirectory("catalogue/category");
+			if(!Directory.Exists("catalogue/category/books")) Directory.CreateDirectory("catalogue/category/books");
             // setting a global User-Agent header in HAP 
             web.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36";
 
