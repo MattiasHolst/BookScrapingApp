@@ -14,16 +14,7 @@ namespace BookScrapingApp
 			// initializing HAP 
 			var web = new HtmlWeb(); 
 			var startPage = "https://books.toscrape.com/";
-			var booksDirectory = "catalogue/category/books/";
-			if(!Directory.Exists("catalogue")) Directory.CreateDirectory("catalogue");
-			if(!Directory.Exists("catalogue/category")) Directory.CreateDirectory("catalogue/category");
-			if(!Directory.Exists("catalogue/category/books")) Directory.CreateDirectory("catalogue/category/books");
-			if(!Directory.Exists("static")) Directory.CreateDirectory("static");
-			if(!Directory.Exists("static/oscar")) Directory.CreateDirectory("static/oscar");
-			if(!Directory.Exists("static/oscar/css")) Directory.CreateDirectory("static/oscar/css");
-			if(!Directory.Exists("static/oscar/js")) Directory.CreateDirectory("static/oscar/js");
-			if(!Directory.Exists("static/oscar/js/bootstrap-datetimepicker")) Directory.CreateDirectory("static/oscar/js/bootstrap-datetimepicker");
-			
+
             // setting a global User-Agent header in HAP 
             web.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36";
 
@@ -36,61 +27,23 @@ namespace BookScrapingApp
 			var cssElements = startPageDocument.DocumentNode.QuerySelectorAll("head > link"); 
 			foreach(var cssElement in cssElements){
 				var cssUrl = HtmlEntity.DeEntitize(cssElement.Attributes["href"].Value); 
-				var pageSplit = cssUrl.Split('/');
-				var countUrl = pageSplit.Length-1;
-
+				if(!Directory.Exists( Path.GetDirectoryName(cssUrl))) Directory.CreateDirectory(Path.GetDirectoryName(cssUrl));
 				client.DownloadFile(startPage+cssUrl, cssUrl);
 
 			}
-           
 
-			//Index pages 
-			var booksSideNavUrl = HtmlEntity.DeEntitize(startPageDocument.DocumentNode.QuerySelector(".nav-list > li > a").Attributes["href"].Value);
-			var booksIndex = booksSideNavUrl.Split("/");
-			try{
-				if (Directory.Exists("catalogue/category/"+booksIndex[booksIndex.Length-2]))
-				{
-					Console.WriteLine("That path exists already. catalogue/category/"+booksIndex[booksIndex.Length-2] + "/index.html");
-				}else{
-					Directory.CreateDirectory("catalogue/category/"+booksIndex[booksIndex.Length-2]);
-					Console.WriteLine("URL is : " + startPage+"catalogue/category/"+booksIndex[booksIndex.Length-2]+"/index.html");
-					client.DownloadFile(startPage+"catalogue/category/"+booksIndex[booksIndex.Length-2]+"/index.html","catalogue/category/"+booksIndex[booksIndex.Length-2]+"/index.html");
-					Console.WriteLine("Directory created successfully");
-				}
-				
-				
-			}
-			catch (Exception e) {
-				Console.WriteLine("Unable to create directory : " + "catalogue/category/"+booksIndex[booksIndex.Length-2]);
-				Console.WriteLine("Error is : " + e.ToString());
-			}
 
- 
-			var sideNavElements = startPageDocument.DocumentNode.QuerySelectorAll(".nav-list > li > ul > li"); 
-
+			/* Create folder structure to sidenav */
+			var sideNavElements = startPageDocument.DocumentNode.QuerySelectorAll("a");
 			foreach(var sideNavElement in sideNavElements){
-				var sideNavUrl = HtmlEntity.DeEntitize(sideNavElement.QuerySelector("a").Attributes["href"].Value); 
-				var pageSplit = sideNavUrl.Split('/');
-
-				var category = pageSplit[pageSplit.Length-2];
-
-				try{
-					if (Directory.Exists(booksDirectory+category))
-					{
-						Console.WriteLine("That path exists already. " + booksDirectory+category+"/index.html");
-						continue;
-					}
-					
-					Directory.CreateDirectory(booksDirectory+category);
-					Console.WriteLine("URL is : " + startPage+booksDirectory+category+"/index.html");
-					client.DownloadFile(startPage+booksDirectory+category+"/index.html", booksDirectory+category+"/index.html");
-					Console.WriteLine("Directory created successfully");
+				var sideNavUrl = HtmlEntity.DeEntitize(sideNavElement.QuerySelector("a").Attributes["href"].Value);
+				Console.WriteLine("SideNavUrl is : " + sideNavUrl);
+				if(Path.GetDirectoryName(sideNavUrl) != ""){
+					if(!Directory.Exists( Path.GetDirectoryName(sideNavUrl))) Directory.CreateDirectory(Path.GetDirectoryName(sideNavUrl));
 				}
-				catch (Exception e) {
-					Console.WriteLine("Unable to create directory : " + booksDirectory+category);
-					Console.WriteLine("Error is : " + e.ToString());
-				}
-				Console.WriteLine("sideNavUrl is : " + sideNavUrl);
+				client.DownloadFile(startPage+sideNavUrl, sideNavUrl);
+
+
 			}
            
 		} 
