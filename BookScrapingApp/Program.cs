@@ -32,6 +32,15 @@ namespace BookScrapingApp
 
 			}
 
+			//Images
+			var imageElements = startPageDocument.DocumentNode.QuerySelectorAll("img"); 
+			foreach(var imageElement in imageElements){
+				var cssUrl = HtmlEntity.DeEntitize(imageElement.Attributes["src"].Value); 
+				if(!Directory.Exists( Path.GetDirectoryName(cssUrl))) Directory.CreateDirectory(Path.GetDirectoryName(cssUrl));
+				client.DownloadFile(startPage+cssUrl, cssUrl);
+
+			}
+
 
 			/* Create folder structure to sidenav */
 			var sideNavElements = startPageDocument.DocumentNode.QuerySelectorAll("a");
