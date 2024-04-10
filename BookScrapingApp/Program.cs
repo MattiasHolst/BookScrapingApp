@@ -11,6 +11,7 @@ namespace BookScrapingApp
  
 		public static void Main() 
 		{ 
+			Program bookScraping = new Program();
 			// initializing HAP 
 			var web = new HtmlWeb(); 
 			var startPage = "https://books.toscrape.com/";
@@ -24,13 +25,7 @@ namespace BookScrapingApp
 			var startPageDocument = web.Load(startPage); 
 
 			//CSS files
-			var cssElements = startPageDocument.DocumentNode.QuerySelectorAll("head > link"); 
-			foreach(var cssElement in cssElements){
-				var cssUrl = HtmlEntity.DeEntitize(cssElement.Attributes["href"].Value); 
-				if(!Directory.Exists( Path.GetDirectoryName(cssUrl))) Directory.CreateDirectory(Path.GetDirectoryName(cssUrl));
-				client.DownloadFile(startPage+cssUrl, cssUrl);
-
-			}
+			bookScraping.downloadCssFiles(startPageDocument,startPage, client);
 
 
 			// Create folder structure with index files 
@@ -47,20 +42,17 @@ namespace BookScrapingApp
 					Console.WriteLine("category : " + startPage+sideNavUrl);
 					var categoryPageDocument = web.Load(startPage+sideNavUrl); 
 					var nextButton = categoryPageDocument.DocumentNode.QuerySelector(".next > a");
+					
 					var path = Path.GetDirectoryName(sideNavUrl);
+					//Small images for first page
+					bookScraping.downloadSmallImages(categoryPageDocument, startPage, path, client);
 					while(nextButton != null){
 						var nextPageLink = nextButton.Attributes["href"].Value;
 						client.DownloadFile(startPage+path+"/"+nextPageLink, path+"/"+nextPageLink);
 						var nextButtonPageDocument = web.Load(startPage+path+"/"+nextPageLink);
 						nextButton = nextButtonPageDocument.DocumentNode.QuerySelector(".next > a");
-						// Small Images
-						var imageElements = nextButtonPageDocument.DocumentNode.QuerySelectorAll("img"); 
-						foreach(var imageElement in imageElements){
-							var imageUrl = HtmlEntity.DeEntitize(imageElement.Attributes["src"].Value); 
-							if(!Directory.Exists( Path.GetDirectoryName(imageUrl))) Directory.CreateDirectory(Path.GetDirectoryName(path+"/"+imageUrl));
-							if(!File.Exists(imageUrl)) client.DownloadFile(startPage+imageUrl, path+"/"+imageUrl);
-
-						}
+						// Small Images for paginagion pages
+						bookScraping.downloadSmallImages(nextButtonPageDocument, startPage, path, client);
 						// Articles
 						var articleElements = nextButtonPageDocument.DocumentNode.QuerySelectorAll(".product_pod"); 
 						foreach(var articleElement in articleElements){
@@ -75,6 +67,26 @@ namespace BookScrapingApp
 
 			}
            
+		}
+
+		public void downloadSmallImages(HtmlDocument pageDocument, string startPage, string path, WebClient client){
+			var imageElements = pageDocument.DocumentNode.QuerySelectorAll("img"); 
+			foreach(var imageElement in imageElements){
+				var imageUrl = HtmlEntity.DeEntitize(imageElement.Attributes["src"].Value); 
+				if(!Directory.Exists( Path.GetDirectoryName(imageUrl))) Directory.CreateDirectory(Path.GetDirectoryName(path+"/"+imageUrl));
+				if(!File.Exists(imageUrl)) client.DownloadFile(startPage+imageUrl, path+"/"+imageUrl);
+
+			}
+		}
+
+		public void downloadCssFiles(HtmlDocument pageDocument, string startPage, WebClient client){
+			var cssElements = pageDocument.DocumentNode.QuerySelectorAll("head > link"); 
+			foreach(var cssElement in cssElements){
+				var cssUrl = HtmlEntity.DeEntitize(cssElement.Attributes["href"].Value); 
+				if(!Directory.Exists( Path.GetDirectoryName(cssUrl))) Directory.CreateDirectory(Path.GetDirectoryName(cssUrl));
+				client.DownloadFile(startPage+cssUrl, cssUrl);
+
+			}
 		}
 	
 	} 
