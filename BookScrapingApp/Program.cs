@@ -37,6 +37,9 @@ namespace BookScrapingApp
 
 			//CSS files
 			DownloadCssFiles(startPageDocument,startPage, client, bookScraping);
+
+			//JS files
+			DownloadJSFiles(startPageDocument, startPage, client, bookScraping);
 			// Create folder structure with index files 
 			var sideNavElements = startPageDocument.DocumentNode.QuerySelectorAll("a");
 			foreach(var sideNavElement in sideNavElements){
@@ -85,6 +88,7 @@ namespace BookScrapingApp
 				}
 
 			}
+		
 		}
 
 		private static void  DownloadSmallImages(HtmlDocument pageDocument, string startPage, string path, WebClient client, Program bookScraping){
@@ -149,6 +153,27 @@ namespace BookScrapingApp
 				}
 				if(!File.Exists(cssUrl)){
 					client.DownloadFile(startPage+cssUrl, cssUrl);
+					bookScraping.numberOfCreatedAndDownloadedObjects++;
+					Console.WriteLine(bookScraping.createdAndDownloadedObjectsText + bookScraping.numberOfCreatedAndDownloadedObjects+"/"+bookScraping.sumCreatedAndDownloadedObjects);
+
+				}
+				
+			}
+		}
+
+		private static void DownloadJSFiles(HtmlDocument pageDocument, string startPage, WebClient client, Program bookScraping){
+			var jsElements = pageDocument.DocumentNode.QuerySelectorAll("script"); 
+			foreach(var jsElement in jsElements){
+				if(jsElement.Attributes["src"] == null) continue;
+				var jsUrl = HtmlEntity.DeEntitize(jsElement.Attributes["src"].Value); 
+				if (jsUrl.Contains("http")) continue;
+				if(!Directory.Exists( Path.GetDirectoryName(jsUrl))) {
+					Directory.CreateDirectory(Path.GetDirectoryName(jsUrl)!);
+					bookScraping.numberOfCreatedAndDownloadedObjects++;
+					Console.WriteLine(bookScraping.createdAndDownloadedObjectsText + bookScraping.numberOfCreatedAndDownloadedObjects+"/"+bookScraping.sumCreatedAndDownloadedObjects);
+				}
+				if(!File.Exists(jsUrl)){
+					client.DownloadFile(startPage+jsUrl, jsUrl);
 					bookScraping.numberOfCreatedAndDownloadedObjects++;
 					Console.WriteLine(bookScraping.createdAndDownloadedObjectsText + bookScraping.numberOfCreatedAndDownloadedObjects+"/"+bookScraping.sumCreatedAndDownloadedObjects);
 
