@@ -11,7 +11,7 @@ namespace BookScrapingApp
 
 		int numberOfCreatedAndDownloadedObjects = 0;
 
-		int sumCreatedAndDownloadedObjects = 6170;
+		int sumCreatedAndDownloadedObjects = 4187;
  
 		public static void Main() 
 		{ 
@@ -20,8 +20,6 @@ namespace BookScrapingApp
 			// initializing HAP 
 			var web = new HtmlWeb(); 
 			string startPage = "https://books.toscrape.com/";
-			string mediaDirectory = "media/cache";
-			
 			
             // setting a global User-Agent header in HAP 
             web.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36";
@@ -65,10 +63,9 @@ namespace BookScrapingApp
 					
 					string path = Path.GetDirectoryName(sideNavUrl)!;
 					//Small images for first page
-					if(path!=null) {
-						DownloadSmallImages(categoryPageDocument, startPage, path, client, bookScraping);
-						DownloadDetailPageImages(categoryPageDocument, startPage, path,mediaDirectory, client, web, bookScraping);
-					}
+					DownloadSmallImages(categoryPageDocument, startPage, path, client, bookScraping);
+
+					DownloadDetailPageImages(categoryPageDocument, startPage, path, client, web, bookScraping);
 					while(nextButton != null){
 						string nextPageLink = nextButton.Attributes["href"].Value;
 						if(!File.Exists(nextPageLink)) {
@@ -81,7 +78,7 @@ namespace BookScrapingApp
 						// Small Images for paginagion pages
 						DownloadSmallImages(nextButtonPageDocument, startPage, path!, client, bookScraping);
 						// Articles
-						DownloadDetailPageImages(nextButtonPageDocument, startPage, path!,mediaDirectory, client, web, bookScraping);
+						DownloadDetailPageImages(nextButtonPageDocument, startPage, path!, client, web, bookScraping);
 					}
 
 					
@@ -101,7 +98,6 @@ namespace BookScrapingApp
 					Console.WriteLine(bookScraping.createdAndDownloadedObjectsText + bookScraping.numberOfCreatedAndDownloadedObjects+"/"+bookScraping.sumCreatedAndDownloadedObjects);
 				} 
 				if(!File.Exists(path+"/"+imageUrl)) {
-					
 					client.DownloadFile(startPage+imageUrl, path+"/"+imageUrl);
 					bookScraping.numberOfCreatedAndDownloadedObjects++;
 					Console.WriteLine(bookScraping.createdAndDownloadedObjectsText + bookScraping.numberOfCreatedAndDownloadedObjects+"/"+bookScraping.sumCreatedAndDownloadedObjects);
@@ -111,7 +107,7 @@ namespace BookScrapingApp
 			}
 		}
 
-		private static void  DownloadDetailPageImages(HtmlDocument pageDocument, string startPage, string path,string mediaDirectory, WebClient client, HtmlWeb web, Program bookScraping){
+		private static void  DownloadDetailPageImages(HtmlDocument pageDocument, string startPage, string path, WebClient client, HtmlWeb web, Program bookScraping){
 			var articleElements = pageDocument.DocumentNode.QuerySelectorAll(".product_pod"); 
 			foreach(var articleElement in articleElements){
 				var detailPageUrl = HtmlEntity.DeEntitize(articleElement.QuerySelector("a").Attributes["href"].Value); 
@@ -128,20 +124,20 @@ namespace BookScrapingApp
 
 				// Todo : Download the detailpages images
 				var detailPageDocument = web.Load(startPage+path+"/"+detailPageUrl); 
-				string imageSrc = detailPageDocument.QuerySelector("img").Attributes["src"].Value;
-				if(!Directory.Exists( Path.GetDirectoryName(mediaDirectory+"/"+imageSrc))) {
-					Directory.CreateDirectory(Path.GetDirectoryName(mediaDirectory+"/"+imageSrc)!);
-					bookScraping.numberOfCreatedAndDownloadedObjects++;
-					Console.WriteLine(bookScraping.createdAndDownloadedObjectsText + bookScraping.numberOfCreatedAndDownloadedObjects+"/"+bookScraping.sumCreatedAndDownloadedObjects);
-				}
-				if(!File.Exists(mediaDirectory+"/"+imageSrc)) {
-					client.DownloadFile(startPage+mediaDirectory+"/"+imageSrc, mediaDirectory+"/"+imageSrc);
-					bookScraping.numberOfCreatedAndDownloadedObjects++;
-					Console.WriteLine(bookScraping.createdAndDownloadedObjectsText + bookScraping.numberOfCreatedAndDownloadedObjects+"/"+bookScraping.sumCreatedAndDownloadedObjects);
-				}
+				DownloadLargeImage(detailPageDocument, startPage, path + "/" + detailPageUrl, client);
 			}
 		}
 
+		private static void DownloadLargeImage(HtmlDocument pageDocument, string startPage, string path, WebClient client){
+			var imageElement = pageDocument.DocumentNode
+				.QuerySelector("article .product_page")
+				.QuerySelector("img"); 
+			var imageUrl = HtmlEntity.DeEntitize(imageElement.Attributes["src"].Value);
+			var newPath = Path.GetDirectoryName(path) + "/" + imageUrl;
+			if(!Directory.Exists( Path.GetDirectoryName(newPath))) Directory.CreateDirectory(Path.GetDirectoryName(newPath));
+			if(!File.Exists(imageUrl)) client.DownloadFile(startPage+newPath, newPath);
+				
+		}
 		private static void DownloadCssFiles(HtmlDocument pageDocument, string startPage, WebClient client, Program bookScraping){
 			var cssElements = pageDocument.DocumentNode.QuerySelectorAll("head > link"); 
 			foreach(var cssElement in cssElements){
