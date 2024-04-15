@@ -4,6 +4,10 @@ Creating a tree structure to symbolize how it looked on the page which will also
 
 Sadly I have not yet looked into async functionality so I would suggest you to go grab a coffee or something while the application is running, I believe it takes about 10-12 minutes to complete at the moment
 
+## Prerequisites
+You need to have .NET/dotnet to run the program.
+Follow this link to download, choose correct distributor etc https://dotnet.microsoft.com/en-us/download/dotnet/8.0
+
 ## To Run
 Navigate into BookScrapingApp/BookScrapingApp and run `dotnet run`
 
